@@ -1,21 +1,25 @@
-import { createComponent } from '@lit/react';
-import { Dialog, type DialogProps } from 'kintone-ui-component';
 import React, { Children, isValidElement, useEffect, useRef, type PropsWithChildren } from 'react';
+
+import { createComponent, type EventName } from '@lit/react';
+
+import { Dialog, type DialogProps } from 'kintone-ui-component';
 import { createHtmlElement } from '../utils/element';
 import { calcKucTagName } from '../utils/kuc';
+
+type KucDialogCloseEvent = Event;
 
 export const KucDialogComponent = createComponent({
     react: React,
     tagName: calcKucTagName('dialog'),
     elementClass: Dialog,
     events: {
-        onClose: 'close',
+        onClose: 'close' as EventName<KucDialogCloseEvent>,
     },
 });
 
 export type KucDialogProps = PropsWithChildren<Omit<DialogProps, 'content' | 'footer' | 'header'>> & {
     open?: boolean;
-    onClose?: (event: Event) => void;
+    onClose?: (event: KucDialogCloseEvent) => void;
 };
 
 // Headerサブコンポーネント

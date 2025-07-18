@@ -1,3 +1,6 @@
+import React from 'react';
+
+import type { EventName } from '@lit/react';
 import { createComponent } from '@lit/react';
 import {
     Text,
@@ -6,24 +9,28 @@ import {
     type TextInputEventDetail,
     type TextProps,
 } from 'kintone-ui-component';
-import React from 'react';
+
 import { calcKucTagName } from '../utils/kuc';
+
+type KucTextChangeEvent = CustomEvent<TextChangeEventDetail>;
+type KucTextFocusEvent = CustomEvent<TextFocusEventDetail>;
+type KucTextInputEvent = CustomEvent<TextInputEventDetail>;
 
 export const KucTextComponent = createComponent({
     react: React,
     tagName: calcKucTagName('text'),
     elementClass: Text,
     events: {
-        onChange: 'change',
-        onFocus: 'focus',
-        onInput: 'input',
+        onChange: 'change' as EventName<KucTextChangeEvent>,
+        onFocus: 'focus' as EventName<KucTextFocusEvent>,
+        onInput: 'input' as EventName<KucTextInputEvent>,
     },
 });
 
 export type KucTextProps = TextProps & {
-    onChange?: (event: CustomEvent<TextChangeEventDetail>) => void;
-    onFocus?: (event: CustomEvent<TextFocusEventDetail>) => void;
-    onInput?: (event: CustomEvent<TextInputEventDetail>) => void;
+    onChange?: (event: KucTextChangeEvent) => void;
+    onFocus?: (event: KucTextFocusEvent) => void;
+    onInput?: (event: KucTextInputEvent) => void;
 };
 
 export default function KucText(props: KucTextProps) {
@@ -31,15 +38,9 @@ export default function KucText(props: KucTextProps) {
         <KucTextComponent
             {...props}
             value={''}
-            onChange={(e: Event) => {
-                props.onChange?.(e as CustomEvent<TextChangeEventDetail>);
-            }}
-            onFocus={(e: Event) => {
-                props.onFocus?.(e as CustomEvent<TextFocusEventDetail>);
-            }}
-            onInput={(e: Event) => {
-                props.onInput?.(e as CustomEvent<TextInputEventDetail>);
-            }}
+            onChange={props.onChange}
+            onFocus={props.onFocus}
+            onInput={props.onInput}
         />
     );
 }
